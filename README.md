@@ -109,8 +109,7 @@ scoring rubric. The agent runs the scripts; it never improvises checks.
 ## Status
 
 This skill is new — it was built in November 2026 and dogfooded against the
-author's own eks-gitops-starter repo. There are no users, stars, or download
-counts to quote yet, and none are claimed here. If it helped you, a star and
+author's own eks-gitops-starter repo. If it helped you, a star and
 an issue describing your setup would help it improve.
 
 ## Contributing
