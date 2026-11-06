@@ -1,0 +1,16 @@
+server:
+  replicas: 2
+  service:
+    type: ClusterIP
+
+controller:
+  replicas: 2
+
+repoServer:
+  replicas: 2
+
+dex:
+  enabled: false
+
+redis:
+  enabled: true
