@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="420" viewBox="0 0 880 420" role="img" aria-labelledby="title desc">
+  <title id="title">How eks-gitops-doctor works</title>
+  <desc id="desc">The skill collects evidence from a repo and optionally a live cluster, scores 33 checks in six weighted categories, and writes a Markdown report with a prioritised fix list. Read-only throughout.</desc>
+  <style>
+    .box { fill: #ffffff; stroke: #1f2937; stroke-width: 1.5; rx: 10; }
+    .box-accent { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.5; rx: 10; }
+    .box-green { fill: #f0fdf4; stroke: #16a34a; stroke-width: 1.5; rx: 10; }
+    .title { font-family: sans-serif; font-size: 15px; font-weight: bold; fill: #111827; }
+    .sub { font-family: sans-serif; font-size: 12px; fill: #4b5563; }
+    .small { font-family: sans-serif; font-size: 11px; fill: #6b7280; }
+    .arrow { stroke: #2563eb; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .note { font-family: sans-serif; font-size: 12px; font-style: italic; fill: #6b7280; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
+    </marker>
+  </defs>
+
+  <!-- Inputs -->
+  <rect class="box" x="20" y="40" width="200" height="90" rx="10"/>
+  <text class="title" x="35" y="68">1. Repo on disk</text>
+  <text class="sub" x="35" y="88">terraform/  kubernetes/</text>
+  <text class="sub" x="35" y="106">apps/  (manifests)</text>
+
+  <rect class="box" x="20" y="170" width="200" height="90" rx="10"/>
+  <text class="title" x="35" y="198">2. Live cluster (optional)</text>
+  <text class="sub" x="35" y="218">kubectl get  ·  helm list</text>
+  <text class="sub" x="35" y="236">terraform plan</text>
+
+  <!-- Collect -->
+  <rect class="box-accent" x="300" y="105" width="220" height="110" rx="10"/>
+  <text class="title" x="315" y="133">Collect (read-only)</text>
+  <text class="sub" x="315" y="153">26 static checks over files</text>
+  <text class="sub" x="315" y="171">7 live checks over the cluster</text>
+  <text class="small" x="315" y="195">Never apply / delete / scale / edit</text>
+
+  <!-- Score -->
+  <rect class="box-accent" x="600" y="105" width="220" height="110" rx="10"/>
+  <text class="title" x="615" y="133">Score (0–100, grade A–F)</text>
+  <text class="sub" x="615" y="153">6 categories, weighted</text>
+  <text class="sub" x="615" y="171">PASS full · WARN half · FAIL none</text>
+  <text class="small" x="615" y="195">SKIP / INFO excluded, never passed</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 220 85 L 295 135"/>
+  <path class="arrow" d="M 220 215 L 295 180"/>
+  <path class="arrow" d="M 520 160 L 595 160"/>
+
+  <!-- Report -->
+  <rect class="box-green" x="300" y="270" width="520" height="90" rx="10"/>
+  <text class="title" x="315" y="298">Markdown report</text>
+  <text class="sub" x="315" y="318">Score by category · overall score + grade · one row per check</text>
+  <text class="sub" x="315" y="336">Fix list, FAIL first — then re-run the doctor to verify each fix</text>
+  <path class="arrow" d="M 710 215 L 710 265"/>
+
+  <text class="note" x="20" y="400">eks-gitops-doctor — read-only audit. No changes are made to the cluster or the repo.</text>
+</svg>
