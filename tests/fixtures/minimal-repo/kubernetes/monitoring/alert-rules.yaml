@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fixture-alerts
+  namespace: monitoring
+spec:
+  groups:
+    - name: demo-app
+      rules:
+        - alert: DemoAppDown
+          expr: up{job="demo-app"} == 0
+          for: 1m
+          labels:
+            severity: critical
+        - alert: DemoAppNoTraffic
+          expr: sum(rate(demo_app_http_requests_total[5m])) == 0
+          for: 5m
+          labels:
+            severity: warning
+        - alert: DemoAppHighLatency
+          expr: histogram_quantile(0.95, sum by (le) (rate(demo_app_http_request_duration_seconds_bucket[5m]))) > 0.5
+          for: 5m
+          labels:
+            severity: warning
+    - name: kubernetes
+      rules:
+        - alert: PodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total[5m]) > 0
+          for: 5m
+          labels:
+            severity: warning

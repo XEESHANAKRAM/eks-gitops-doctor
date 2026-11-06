@@ -1,0 +1,31 @@
+prometheus:
+  prometheusSpec:
+    retention: 30d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+
+grafana:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 5Gi
+
+alertmanager:
+  enabled: true
+  config:
+    receivers:
+      - name: team
+        webhook_configs:
+          - url: https://example.com/hooks/alerts
+
+kubeStateMetrics:
+  enabled: true
+nodeExporter:
+  enabled: true
