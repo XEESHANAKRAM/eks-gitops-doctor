@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate skill
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bash syntax check
+        run: |
+          bash -n scripts/doctor.sh
+          bash -n scripts/lib/common.sh
+          bash -n scripts/checks/static.sh
+          bash -n scripts/checks/live.sh
+
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+
+      - name: Shellcheck
+        run: shellcheck --severity=warning scripts/doctor.sh scripts/lib/common.sh scripts/checks/*.sh
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          python3 - <<'PY'
+          import re, sys
+          text = open("SKILL.md", encoding="utf-8").read()
+          m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+          assert m, "SKILL.md has no YAML frontmatter block"
+          fm = m.group(1)
+          name = re.search(r"^name:\s*(\S+)\s*$", fm, re.M)
+          desc = re.search(r"^description:\s*(.+?)\s*$", fm, re.M)
+          assert name, "frontmatter is missing 'name'"
+          assert re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name.group(1)), f"bad skill name: {name.group(1)}"
+          assert desc and len(desc.group(1)) >= 20, "frontmatter 'description' is missing or too short"
+          print(f"SKILL.md frontmatter OK: name={name.group(1)}")
+          PY
+
+      - name: Markdown link check
+        run: python3 scripts/check-links.py .
+
+      - name: YAML lint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+
+      - name: Doctor run against fixture repo
+        run: |
+          ./scripts/doctor.sh --static tests/fixtures/minimal-repo --output /tmp/fixture-report.md
+          grep -q 'Overall: 94/100' /tmp/fixture-report.md
+          grep -q '| CLU-04 | PASS |' /tmp/fixture-report.md
+          grep -q '| CLU-06 | PASS |' /tmp/fixture-report.md
+          grep -q '| CLU-07 | WARN |' /tmp/fixture-report.md
+          grep -q '| ARG-04 | WARN |' /tmp/fixture-report.md
+          grep -q '0 failures' /tmp/fixture-report.md
+          echo "Fixture audit behaves as expected."
