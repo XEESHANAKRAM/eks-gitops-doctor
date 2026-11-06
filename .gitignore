@@ -1,0 +1,10 @@
+# Prevent committing local state, credentials, and generated reports.
+*.tfstate
+*.tfstate.*
+*.tfvars
+!terraform.tfvars.example
+!tests/fixtures/minimal-repo/terraform/terraform.tfvars
+.terraform/
+doctor-report*.md
+report.md
+.DS_Store
