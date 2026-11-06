@@ -55,7 +55,9 @@ jobs:
 
       - name: Doctor run against fixture repo
         run: |
-          ./scripts/doctor.sh --static tests/fixtures/minimal-repo --output /tmp/fixture-report.md
+          # Invoked via bash (not ./scripts/doctor.sh) because files uploaded
+          # through GitHub's web UI lose the executable bit (mode 100644).
+          bash scripts/doctor.sh --static tests/fixtures/minimal-repo --output /tmp/fixture-report.md
           grep -q 'Overall: 94/100' /tmp/fixture-report.md
           grep -q '| CLU-04 | PASS |' /tmp/fixture-report.md
           grep -q '| CLU-06 | PASS |' /tmp/fixture-report.md
